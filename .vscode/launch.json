@@ -1,0 +1,39 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "./Menu/build/Menu.elf",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/interface/stlink.cfg",
+                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/target/stm32f1x.cfg"
+            ],
+            "searchDir": [],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",
+            "svdFile": "F:/stm32/F4/stm32f407.svd",
+            "swoConfig": {
+                "enabled": false,
+                "cpuFrequency":  72000000,
+                "swoFrequency":    400000,
+                "source": "probe",
+                "decoders": [
+                    {
+                        "label": "ITM port 0 output",
+                        "type": "console",
+                        "port": 0,
+                        "showOnStartup": true,
+                        "encoding": "ascii"
+                    }
+                ]
+            }
+        }
+    ] 
+}

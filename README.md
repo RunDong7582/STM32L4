@@ -1,0 +1,1 @@
+mostly based on STM32L476
