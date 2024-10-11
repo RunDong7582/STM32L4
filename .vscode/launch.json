@@ -6,22 +6,22 @@
     "configurations": [
         {
             "cwd": "${workspaceRoot}",
-            "executable": "./Menu/build/Menu.elf",
+            "executable": "./   /build/     .elf",
             "name": "Debug with OpenOCD",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
             "configFiles": [
-                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/interface/stlink.cfg",
-                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/target/stm32f1x.cfg"
+                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/interface/jlink.cfg",
+                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/target/stm32l4x.cfg"
             ],
             "searchDir": [],
             "runToEntryPoint": "main",
             "showDevDebugOutput": "raw",
-            "svdFile": "F:/stm32/F4/stm32f407.svd",
+            "svdFile": "F:/stm32/L4/stm32l476.svd",
             "swoConfig": {
                 "enabled": false,
-                "cpuFrequency":  72000000,
+                "cpuFrequency":  80000000,
                 "swoFrequency":    400000,
                 "source": "probe",
                 "decoders": [
