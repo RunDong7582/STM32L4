@@ -6,13 +6,13 @@
     "configurations": [
         {
             "cwd": "${workspaceRoot}",
-            "executable": "./   /build/     .elf",
-            "name": "Debug with OpenOCD",
+            "executable": "./Maketest/build/Maketest.elf",
+            "name": "Debug with OpenOCD", 
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
             "configFiles": [
-                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/interface/jlink.cfg",
+                "F:/stm32/win-dev-tools/Openocd/openocd/scripts/interface/stlink.cfg",
                 "F:/stm32/win-dev-tools/Openocd/openocd/scripts/target/stm32l4x.cfg"
             ],
             "searchDir": [],
