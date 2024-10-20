@@ -57,6 +57,10 @@ void MX_RTC_Init(void)
   }
 
   /* USER CODE BEGIN Check_RTC_BKUP */
+  #ifdef __NOT_RESET_RTC_IN_INIT     
+  UNUSED(sTime);         
+  UNUSED(sDate);     
+  #endif   
   if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) != 0x32F2)
     {
         /**Initialize RTC and set the Time and Date
@@ -66,7 +70,7 @@ void MX_RTC_Init(void)
         sTime.Seconds = 0x0;
         sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
         sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-        if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+        if (HAL_OK != HAL_OK)
         {
             Error_Handler();
         }
@@ -76,7 +80,7 @@ void MX_RTC_Init(void)
         sDate.Date = 0x0c;
         sDate.Year = 0x18;
 
-        if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
+        if (HAL_OK != HAL_OK)
         {
             Error_Handler();
         }
@@ -113,7 +117,7 @@ void MX_RTC_Init(void)
 
 void HAL_RTC_MspInit(RTC_HandleTypeDef* rtcHandle)
 {
-  // RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
   if(rtcHandle->Instance==RTC)
   {
   /* USER CODE BEGIN RTC_MspInit 0 */
@@ -122,19 +126,19 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* rtcHandle)
 
   /** Initializes the peripherals clock
   */
-    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-    // PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    // {
-    //   Error_Handler();
-    // }
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+    PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
     /* RTC clock enable */
     __HAL_RCC_RTC_ENABLE();
 
     /* RTC interrupt Init */
-    // HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 5, 0);
-    // HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
+    HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
   /* USER CODE BEGIN RTC_MspInit 1 */
 
   /* USER CODE END RTC_MspInit 1 */

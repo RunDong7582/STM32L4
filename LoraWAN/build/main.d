@@ -42,7 +42,12 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h Core/Inc/i2c.h \
  Core/Inc/usart.h Core/Inc/rtc.h Core/Inc/tim.h Core/Inc/gpio.h \
- Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h
+ Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h \
+ Core/Inc/board/sensors/hdc1000.h Core/Inc/board/sensors/opt3001.h \
+ Core/Inc/board/sensors/MPL3115.h Core/Inc/board/sensors/mma8451.h \
+ Core/Inc/board/lcd/ST7789v.h Core/Inc/board/lcd/XPT2046.h \
+ Core/Inc/stm32l4xx_it.h Core/Inc/board/lorawan_node_driver.h \
+ Core/Inc/common/common.h
 Core/Inc/main.h:
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -95,3 +100,12 @@ Core/Inc/rtc.h:
 Core/Inc/tim.h:
 Core/Inc/gpio.h:
 Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h:
+Core/Inc/board/sensors/hdc1000.h:
+Core/Inc/board/sensors/opt3001.h:
+Core/Inc/board/sensors/MPL3115.h:
+Core/Inc/board/sensors/mma8451.h:
+Core/Inc/board/lcd/ST7789v.h:
+Core/Inc/board/lcd/XPT2046.h:
+Core/Inc/stm32l4xx_it.h:
+Core/Inc/board/lorawan_node_driver.h:
+Core/Inc/common/common.h:

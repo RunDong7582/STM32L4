@@ -40,7 +40,7 @@ DMA_HandleTypeDef hdma_usart2_rx;
 
 /* LPUART1 init function */
 
-void MX_LPUART1_UART_Init(uint32_t baudrate)
+void MX_LPUART1_Init(uint32_t baudrate)
 {
 
   /* USER CODE BEGIN LPUART1_Init 0 */
@@ -110,7 +110,7 @@ void MX_USART1_UART_Init(uint32_t baudrate)
 }
 /* USART2 init function */
 
-void MX_USART2_UART_Init(uint32_t baudrate)
+void MX_USART2_Init(uint32_t baudrate)
 {
 
   /* USER CODE BEGIN USART2_Init 0 */
@@ -144,7 +144,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  // RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
   if(uartHandle->Instance==LPUART1)
   {
   /* USER CODE BEGIN LPUART1_MspInit 0 */
@@ -153,12 +153,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /** Initializes the peripherals clock
   */
-    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_LPUART1;
-    // PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_PCLK1;
-    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    // {
-    //   Error_Handler();
-    // }
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_LPUART1;
+    PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_PCLK1;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
     /* LPUART1 clock enable */
     __HAL_RCC_LPUART1_CLK_ENABLE();

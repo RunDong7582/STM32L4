@@ -28,7 +28,14 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "hdc1000.h"
+#include "opt3001.h"
+#include "MPL3115.h"
+#include "mma8451.h"
+#include "ST7789v.h"
+#include "XPT2046.h"
+#include "stm32l4xx_it.h"
+#include "lorawan_node_driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,13 +100,35 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_I2C1_Init();
-  // MX_LPUART1_UART_Init();
-  // MX_USART1_UART_Init();
-  // MX_USART2_UART_Init();
-  // MX_RTC_Init();
-  MX_TIM6_Init();
+  MX_RTC_Init();
 
+    /** 串口初始化 */
+  MX_LPUART1_Init(9600);  //MCU与模块相连串口
+  MX_USART2_Init(115200);  //MCU与PC相连串口
+  MX_I2C1_Init();
+
+  HAL_Delay(20);
+  LPUART1_Clear_IT();         //清除中断并开启空闲中断
+  USART2_Clear_IT();           //清除中断并开启空闲中断
+  
+  /** 温湿度传感器 */
+  HDC1000_Init();
+
+  /** 光强传感器 */
+  OPT3001_Init();
+
+  /** 气压传感器 */
+  MPL3115_Init(MODE_BAROMETER);
+
+  /** 加速度传感器 */ 
+  MMA8451_Init();
+
+  /** 复位模块 */
+  HAL_Delay(500);              //模块上电初始化时间
+  Node_Hard_Reset();
+
+  /** 开发板信息打印 */
+  LoRaWAN_Borad_Info_Print();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -121,6 +150,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    LoRaWAN_Func_Process();
   }
   /* USER CODE END 3 */
 }

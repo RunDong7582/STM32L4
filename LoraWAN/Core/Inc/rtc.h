@@ -36,7 +36,14 @@ extern "C" {
 extern RTC_HandleTypeDef hrtc;
 
 /* USER CODE BEGIN Private defines */
+//宏定义如下：
+#ifndef __NOT_RESET_RTC_IN_INIT
+#define __NOT_RESET_RTC_IN_INIT
 
+#define HAL_RTC_SetDate(a, b, c) HAL_OK
+#define HAL_RTC_SetTime(a, b, c) HAL_OK
+
+#endif
 /* USER CODE END Private defines */
 
 void MX_RTC_Init(void);
