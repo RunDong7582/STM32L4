@@ -29,7 +29,8 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "stm32l4xx_hal.h"
+#include "stm32l4xx_hal_rtc.h"
 /* USER CODE END Includes */
 
 extern RTC_HandleTypeDef hrtc;

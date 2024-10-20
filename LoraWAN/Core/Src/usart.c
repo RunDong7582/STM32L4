@@ -72,15 +72,23 @@ void MX_LPUART1_UART_Init(uint32_t baudrate)
 
 void MX_USART1_UART_Init(uint32_t baudrate)
 {
-    GPIO_InitTypeDef GPIO_InitStruct;
 
-    __HAL_RCC_GPIOB_CLK_ENABLE();
+  /* USER CODE BEGIN USART1_Init 0 */
+  GPIO_InitTypeDef GPIO_InitStruct;
 
-    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
-    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
+  GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+//    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+//    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
   // huart1.Instance = USART1;
   // huart1.Init.BaudRate = 115200;
   // huart1.Init.WordLength = UART_WORDLENGTH_8B;
@@ -95,9 +103,9 @@ void MX_USART1_UART_Init(uint32_t baudrate)
   // {
   //   Error_Handler();
   // }
-  // /* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE BEGIN USART1_Init 2 */
 
-  // /* USER CODE END USART1_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 /* USART2 init function */
@@ -136,7 +144,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  // RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
   if(uartHandle->Instance==LPUART1)
   {
   /* USER CODE BEGIN LPUART1_MspInit 0 */
@@ -145,17 +153,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /** Initializes the peripherals clock
   */
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_LPUART1;
-    PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_PCLK1;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_LPUART1;
+    // PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_PCLK1;
+    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    // {
+    //   Error_Handler();
+    // }
 
     /* LPUART1 clock enable */
     __HAL_RCC_LPUART1_CLK_ENABLE();
 
-    __HAL_RCC_GPIOC_CLK_ENABLE();
+    // __HAL_RCC_GPIOC_CLK_ENABLE();
     /**LPUART1 GPIO Configuration
     PC0     ------> LPUART1_RX
     PC1     ------> LPUART1_TX
@@ -200,17 +208,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /** Initializes the peripherals clock
   */
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-    PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+    // PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    // {
+    //   Error_Handler();
+    // }
 
     /* USART1 clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
 
-    __HAL_RCC_GPIOB_CLK_ENABLE();
+    // __HAL_RCC_GPIOB_CLK_ENABLE();
     /**USART1 GPIO Configuration
     PB6     ------> USART1_TX
     PB7     ------> USART1_RX
@@ -255,17 +263,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /** Initializes the peripherals clock
   */
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
-    PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+    // PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    // {
+    //   Error_Handler();
+    // }
 
     /* USART2 clock enable */
     __HAL_RCC_USART2_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+    // __HAL_RCC_GPIOA_CLK_ENABLE();
     /**USART2 GPIO Configuration
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
@@ -296,7 +304,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart2_rx);
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 5, 1);
+    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -432,13 +440,13 @@ void USART2_Clear_IT(void)
 {
     __HAL_UART_CLEAR_FLAG(&huart2,UART_FLAG_IDLE);               //清除空闲中断标志
     HAL_Delay(2);
-    __HAL_UART_CLEAR_FLAG(&huart2,UART_FLAG_TC);                 //清除发送标志
-    HAL_UART_Receive_DMA(&huart2, Usart2_RX.RX_Buf, RECEIVELEN); //开启DMA接收
+    __HAL_UART_CLEAR_FLAG(&huart2,UART_FLAG_TC);                 //清除坑�?�标�?
+    HAL_UART_Receive_DMA(&huart2, Usart2_RX.RX_Buf, RECEIVELEN); //�?坯DMA接收
     __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);                 //使能空闲中断
     __HAL_UART_CLEAR_FLAG(&huart2,UART_FLAG_IDLE);               //清除空闲中断标志
 }
 
-//串口接收空闲中断
+//串坣接收空闲中断
 void usart2_receive_idle(void)
 {
     uint32_t temp;

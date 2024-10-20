@@ -31,7 +31,7 @@ extern "C" {
 /* DMA memory to memory transfer handles -------------------------------------*/
 
 /* USER CODE BEGIN Includes */
-
+#include "stm32l4xx_hal.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */

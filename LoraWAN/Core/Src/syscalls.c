@@ -12,7 +12,7 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include "main.h"
-
+#include "stm32l4xx_hal.h"
 /* Variables */
 //#undef errno
 extern int errno;

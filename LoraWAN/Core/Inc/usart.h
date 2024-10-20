@@ -30,7 +30,6 @@ extern "C" {
 
 /* USER CODE BEGIN Includes */
 #include "stm32l4xx_hal.h"
-#include "main.h"
 
     /*-------------根据具体的硬件平台，改写以下宏定义中操作的具体实现---------------*/
 
@@ -130,12 +129,8 @@ extern UART_HandleTypeDef huart2;
     void UART1_SendByte(uint8_t data);
     void USART1_SendString(uint8_t *str);
     void Clear_UART1_IT(void);
-    
-/* USER CODE END Private defines */
 
-void MX_LPUART1_UART_Init(void);
-void MX_USART1_UART_Init(void);
-void MX_USART2_UART_Init(void);
+/* USER CODE END Private defines */
 
 /* USER CODE BEGIN Prototypes */
 

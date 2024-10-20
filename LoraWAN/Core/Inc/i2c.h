@@ -29,7 +29,7 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "stm32l4xx_hal.h"
 /* USER CODE END Includes */
 
 extern I2C_HandleTypeDef hi2c1;
