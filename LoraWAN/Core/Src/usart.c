@@ -154,7 +154,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   /** Initializes the peripherals clock
   */
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_LPUART1;
-    PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_PCLK1;
+    PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_HSI;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
     {
       Error_Handler();
@@ -208,12 +208,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /** Initializes the peripherals clock
   */
-    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-    // PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
-    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    // {
-    //   Error_Handler();
-    // }
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+    PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_HSI;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
     /* USART1 clock enable */
     __HAL_RCC_USART1_CLK_ENABLE();
@@ -263,12 +263,12 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
   /** Initializes the peripherals clock
   */
-    // PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
-    // PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
-    // if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    // {
-    //   Error_Handler();
-    // }
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+    PeriphClkInit.Usart2ClockSelection = RCC_USART1CLKSOURCE_HSI;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
     /* USART2 clock enable */
     __HAL_RCC_USART2_CLK_ENABLE();
@@ -304,7 +304,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart2_rx);
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(USART2_IRQn, 6, 3);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
