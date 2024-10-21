@@ -58,6 +58,8 @@ Core/Src/board/sensors/mma8451.c\
 Core/Src/board/sensors/mpl3115.c\
 Core/Src/board/sensors/MX25L128.c\
 Core/Src/board/sensors/opt3001.c\
+Core/Src/board/lcd/ST7789v.c\
+Core/Src/board/lcd/XPT2046.c\
 app/app.c\
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c \

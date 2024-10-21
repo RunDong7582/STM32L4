@@ -123,6 +123,8 @@ int main(void)
   /** 加速度传感器 */ 
   MMA8451_Init();
 
+  /** 液晶 */
+  LCD_Init();
   /** 复位模块 */
   HAL_Delay(500);              //模块上电初始化时间
   Node_Hard_Reset();

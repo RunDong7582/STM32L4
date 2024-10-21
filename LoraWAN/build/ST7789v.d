@@ -1,4 +1,5 @@
-build/key.o: Core/Src/board/key.c Core/Inc/board/key.h \
+build/ST7789v.o: Core/Src/board/lcd/ST7789v.c \
+ Core/Inc/board/lcd/ST7789v.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  Core/Inc/stm32l4xx_hal_conf.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -28,12 +29,10 @@ build/key.o: Core/Src/board/key.c Core/Inc/board/key.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h Core/Inc/app.h \
- Core/Inc/common/common.h Core/Inc/gpio.h Core/Inc/main.h \
- Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h Core/Inc/usart.h \
- Core/Inc/board/lcd/XPT2046.h Core/Inc/board/lcd/ST7789v.h \
- Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
-Core/Inc/board/key.h:
+ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
+ Core/Inc/board/lcd/XPT2046.h Core/Inc/gpio.h Core/Inc/main.h \
+ Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h Core/Inc/tim.h
+Core/Inc/board/lcd/ST7789v.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 Core/Inc/stm32l4xx_hal_conf.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -66,12 +65,8 @@ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-Core/Inc/app.h:
-Core/Inc/common/common.h:
+Core/Inc/board/lcd/XPT2046.h:
 Core/Inc/gpio.h:
 Core/Inc/main.h:
 Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h:
-Core/Inc/usart.h:
-Core/Inc/board/lcd/XPT2046.h:
-Core/Inc/board/lcd/ST7789v.h:
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+Core/Inc/tim.h:
