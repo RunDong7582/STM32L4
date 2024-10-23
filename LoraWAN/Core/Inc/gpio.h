@@ -34,6 +34,9 @@ extern "C" {
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
+//-------------LED GROUP--------------------
+extern GPIO_TypeDef *LED_PORT[4];
+extern GPIO_TypeDef *LED_Pin[4];
 //-------------Key1\Key2 Macro definition-----------------------------------------
 #define Gpio_KEY1   GPIOC
 #define Gpio_KEY2   GPIOE

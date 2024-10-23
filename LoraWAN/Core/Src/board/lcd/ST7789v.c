@@ -818,7 +818,7 @@ void LCD_Init(void)
         XPT2046_init();
         MX_TIM15_Init(1500);
         LCD_Test();
-        Touch_Adjust();
+        // Touch_Adjust();
 			  LCD_Clear(0xbefe);
 			  LCD_ShowString(30,120,"Start Programming Now",BLUE);
     }

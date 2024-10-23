@@ -25,7 +25,21 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "hdc1000.h"
+#include "opt3001.h"
+#include "MPL3115.h"
+#include "mma8451.h"
+#include "ST7789v.h"
+#include "XPT2046.h"
+#include "stm32l4xx_it.h"
+#include "lorawan_node_driver.h"
+#include "dma.h"
+#include "i2c.h"
+#include "usart.h"
+#include "rtc.h"
+#include "tim.h"
+#include "gpio.h"
+#include "app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +59,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+
+HDC1000_pack hdc_pack = {
+    0.0f,         /*   temp       */
+    0.0f,         /*   humi       */
+       0,         /*   update     */
+};
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -150,7 +170,6 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    LoRaWAN_Func_Process();
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
@@ -169,6 +188,7 @@ void StartLoraWTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
+    LoRaWAN_Func_Process();
     osDelay(1);
   }
   /* USER CODE END StartLoraWTask */
@@ -184,6 +204,26 @@ void StartLoraWTask(void *argument)
 void StartTempTask(void *argument)
 {
   /* USER CODE BEGIN StartTempTask */
+  // hdc_pack.temp = HDC1000_Read_Temper();
+  // hdc_pack.humi = HDC1000_Read_Humidi();
+
+  // if  ( hdc_pack.update == 0  )
+  // {
+  //     if  ( hdc_pack.temp !=0.0f || hdc_pack.humi != 0.0f)
+  //     {
+  //         debug_printf("温湿度传感器正常 温度: %.3f ℃   湿度: %.3f%% \r\n",(double)hdc_pack.temp/1000.0,(double)hdc_pack.humi/1000.0);
+  //     } else
+  //     {
+  //         hdc_pack.update  = -13;
+  //         debug_printf("温湿度传感器异常  error:d% \r\n", hdc_pack.update);
+  //     }
+  // } 
+  // else
+  // {
+  //     debug_printf("温湿度传感器异常  error:d% \r\n", hdc_pack.update);
+  // }
+
+  // hdc_pack.update = 0;
   /* Infinite loop */
   for(;;)
   {
@@ -206,6 +246,7 @@ void StartLEDTask(void *argument)
   for(;;)
   {
     osDelay(1);
+    // HAL_GPIO_TogglePin(LED11_GPIO_Port,LED11_Pin);
   }
   /* USER CODE END StartLEDTask */
 }

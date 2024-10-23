@@ -17,6 +17,8 @@
 /** 入网超时时间：120s */
 #define JOIN_TIME_120_SEC  120
 
+/*  */
+#define __IO volatile
 
 typedef struct {
     char upcnt[10];
@@ -33,6 +35,12 @@ typedef struct {
     char snr[10];
 
 } DEBUG;
+
+typedef struct {
+    float temp;
+    float humi;
+    __IO int update;
+}HDC1000_pack;
 
 void LoRaWAN_Func_Process(void);
 void LoRaWAN_Borad_Info_Print(void);

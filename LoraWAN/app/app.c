@@ -1,14 +1,17 @@
 #include <string.h>
 #include "app.h"
 #include "usart.h"
-#include "gpio.h"
+#include "../Inc/gpio.h"
 #include "lorawan_node_driver.h"
 #include "hdc1000.h"
 #include "sensors_test.h"
-
+#include "cmsis_os2.h"
 
 extern DEVICE_MODE_T device_mode;
 extern DEVICE_MODE_T *Device_Mode_str;
+GPIO_TypeDef *LED_PORT[4] = {LED6_GPIO_Port, LED7_GPIO_Port, LED8_GPIO_Port, LED11_GPIO_Port};
+GPIO_TypeDef *LED_Pin[4] = {LED6_Pin,       LED7_Pin,       LED8_Pin,       LED11_Pin};
+
 down_list_t *pphead = NULL;
 
 //-----------------Users application--------------------------
@@ -98,9 +101,14 @@ void LoRaWAN_Func_Process(void)
         {
             dev_stat = PRO_TRAINING_MODE;
             debug_printf("\r\n[Project Mode]\r\n");
-
         }
-				
+		
+        debug_printf("LED is now flowing\r\n");
+        for(int k = 0; k <=3; k++)
+        {
+            HAL_GPIO_TogglePin(LED_PORT[k],LED_Pin[k]);
+            osDelay(200);
+        }
 				/* 你的实验代码位置 */
 
     }

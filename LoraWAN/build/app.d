@@ -28,10 +28,13 @@ build/app.o: app/app.c Core/Inc/app.h Core/Inc/usart.h Core/Inc/main.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h Core/Inc/gpio.h \
+ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
+ Core/Inc/../Inc/gpio.h Core/Inc/../Inc/main.h \
  Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h \
- Core/Inc/board/lorawan_node_driver.h Core/Inc/common/common.h \
- Core/Inc/board/sensors/hdc1000.h Core/Inc/board/sensors_test.h
+ Core/Inc/board/lorawan_node_driver.h Core/Inc/gpio.h \
+ Core/Inc/common/common.h Core/Inc/board/sensors/hdc1000.h \
+ Core/Inc/board/sensors_test.h \
+ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 Core/Inc/app.h:
 Core/Inc/usart.h:
 Core/Inc/main.h:
@@ -67,9 +70,12 @@ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-Core/Inc/gpio.h:
+Core/Inc/../Inc/gpio.h:
+Core/Inc/../Inc/main.h:
 Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h:
 Core/Inc/board/lorawan_node_driver.h:
+Core/Inc/gpio.h:
 Core/Inc/common/common.h:
 Core/Inc/board/sensors/hdc1000.h:
 Core/Inc/board/sensors_test.h:
+Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
