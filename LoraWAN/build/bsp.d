@@ -1,18 +1,4 @@
-build/freertos.o: Core/Src/freertos.c \
- Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- Core/Inc/FreeRTOSConfig.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/list.h Core/Inc/main.h \
- Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
- Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
- Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- Core/Inc/board/sensors/hdc1000.h \
+build/bsp.o: Core/bsp/src/bsp.c Core/bsp/inc/bsp.h Core/bsp/inc/bspPwm.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  Core/Inc/stm32l4xx_hal_conf.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -43,28 +29,10 @@ build/freertos.o: Core/Src/freertos.c \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- Core/Inc/board/sensors/opt3001.h Core/Inc/board/sensors/MPL3115.h \
- Core/Inc/board/sensors/mma8451.h Core/Inc/board/lcd/ST7789v.h \
- Core/Inc/board/lcd/XPT2046.h Core/Inc/gpio.h Core/Inc/main.h \
- Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h \
- Core/Inc/stm32l4xx_it.h Core/Inc/board/lorawan_node_driver.h \
- Core/Inc/usart.h Core/Inc/common/common.h Core/Inc/dma.h Core/Inc/i2c.h \
- Core/Inc/rtc.h Core/Inc/tim.h Core/Inc/app.h
-Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-Core/Inc/FreeRTOSConfig.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-Core/Inc/main.h:
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/queue.h:
-Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-Core/Inc/board/sensors/hdc1000.h:
+ Core/bsp/inc/bspTypeDef.h Core/bsp/inc/bspGpio.h Core/bsp/inc/bspClk.h \
+ Core/bsp/inc/bspRtc.h Core/Inc/appConfig.h
+Core/bsp/inc/bsp.h:
+Core/bsp/inc/bspPwm.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 Core/Inc/stm32l4xx_hal_conf.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -97,20 +65,8 @@ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-Core/Inc/board/sensors/opt3001.h:
-Core/Inc/board/sensors/MPL3115.h:
-Core/Inc/board/sensors/mma8451.h:
-Core/Inc/board/lcd/ST7789v.h:
-Core/Inc/board/lcd/XPT2046.h:
-Core/Inc/gpio.h:
-Core/Inc/main.h:
-Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h:
-Core/Inc/stm32l4xx_it.h:
-Core/Inc/board/lorawan_node_driver.h:
-Core/Inc/usart.h:
-Core/Inc/common/common.h:
-Core/Inc/dma.h:
-Core/Inc/i2c.h:
-Core/Inc/rtc.h:
-Core/Inc/tim.h:
-Core/Inc/app.h:
+Core/bsp/inc/bspTypeDef.h:
+Core/bsp/inc/bspGpio.h:
+Core/bsp/inc/bspClk.h:
+Core/bsp/inc/bspRtc.h:
+Core/Inc/appConfig.h:

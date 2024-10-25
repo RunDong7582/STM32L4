@@ -47,7 +47,7 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Core/Inc/board/sensors/MPL3115.h Core/Inc/board/sensors/mma8451.h \
  Core/Inc/board/lcd/ST7789v.h Core/Inc/board/lcd/XPT2046.h \
  Core/Inc/stm32l4xx_it.h Core/Inc/board/lorawan_node_driver.h \
- Core/Inc/common/common.h
+ Core/Inc/common/common.h clipack/inc/FreeRTOS_CLI.h
 Core/Inc/main.h:
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
@@ -109,3 +109,4 @@ Core/Inc/board/lcd/XPT2046.h:
 Core/Inc/stm32l4xx_it.h:
 Core/Inc/board/lorawan_node_driver.h:
 Core/Inc/common/common.h:
+clipack/inc/FreeRTOS_CLI.h:

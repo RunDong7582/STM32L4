@@ -36,6 +36,8 @@
 #include "XPT2046.h"
 #include "stm32l4xx_it.h"
 #include "lorawan_node_driver.h"
+#include "FreeRTOS_CLI.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,7 +110,7 @@ int main(void)
   MX_I2C1_Init();
 
   HAL_Delay(20);
-  LPUART1_Clear_IT();         //清除中断并开启空闲中断
+  LPUART1_Clear_IT();          //清除中断并开启空闲中断
   USART2_Clear_IT();           //清除中断并开启空闲中断
   
   /** 温湿度传感器 */
@@ -132,7 +134,8 @@ int main(void)
   /** 开发板信息打印 */
   LoRaWAN_Borad_Info_Print();
   /* USER CODE BEGIN 2 */
-
+  vRegisterSampleCLICommands();
+  vUARTCommandConsoleStart( 512, 1 );
   /* USER CODE END 2 */
 
   /* Init scheduler */

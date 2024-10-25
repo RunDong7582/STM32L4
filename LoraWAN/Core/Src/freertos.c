@@ -22,6 +22,7 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
+#include "queue.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -59,7 +60,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
 HDC1000_pack hdc_pack = {
     0.0f,         /*   temp       */
     0.0f,         /*   humi       */
@@ -92,10 +92,14 @@ const osThreadAttr_t TempTask_attributes = {
 osThreadId_t LEDTaskHandle;
 const osThreadAttr_t LEDTask_attributes = {
   .name = "LEDTask",
-  .stack_size = 526 * 4,
+  .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-
+/* Definitions for QueueUart1 */
+osMessageQueueId_t QueueUart1Handle;
+const osMessageQueueAttr_t QueueUart1_attributes = {
+  .name = "QueueUart1"
+};
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
@@ -132,6 +136,10 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+
+  /* creation of QueueUart1 */
+  QueueUart1Handle = osMessageQueueNew (16, 128, &QueueUart1_attributes);
+
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -167,10 +175,11 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+      osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -187,7 +196,7 @@ void StartLoraWTask(void *argument)
   /* USER CODE BEGIN StartLoraWTask */
   /* Infinite loop */
   for(;;)
-  {
+  {                                                                                                                                                                                                                                                              
     LoRaWAN_Func_Process();
     osDelay(1);
   }
@@ -245,8 +254,11 @@ void StartLEDTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
-    // HAL_GPIO_TogglePin(LED11_GPIO_Port,LED11_Pin);
+    for(int k = 0; k <4 ; k++)
+    {
+        HAL_GPIO_TogglePin(LED_PORT[k],LED_Pin[k]);
+        osDelay(pdMS_TO_TICKS(500));
+    }
   }
   /* USER CODE END StartLEDTask */
 }

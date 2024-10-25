@@ -24,6 +24,7 @@
 #include "gpio.h"
 #include "dma.h"
 #include <stdarg.h>
+#include "FreeRTOS.h"
 
 usart_recv_t Usart1_RX;
 usart_recv_t Usart2_RX;
@@ -70,7 +71,7 @@ void MX_LPUART1_Init(uint32_t baudrate)
 }
 /* USART1 init function */
 
-void MX_USART1_UART_Init(uint32_t baudrate)
+void MX_USART1_Init(uint32_t baudrate)
 {
 
   /* USER CODE BEGIN USART1_Init 0 */
@@ -89,20 +90,20 @@ void MX_USART1_UART_Init(uint32_t baudrate)
   /* USER CODE BEGIN USART1_Init 1 */
 
   /* USER CODE END USART1_Init 1 */
-  // huart1.Instance = USART1;
-  // huart1.Init.BaudRate = 115200;
-  // huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  // huart1.Init.StopBits = UART_STOPBITS_1;
-  // huart1.Init.Parity = UART_PARITY_NONE;
-  // huart1.Init.Mode = UART_MODE_TX_RX;
-  // huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  // huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  // huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  // huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  // if (HAL_UART_Init(&huart1) != HAL_OK)
-  // {
-  //   Error_Handler();
-  // }
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = baudrate;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
@@ -466,17 +467,17 @@ void usart2_receive_idle(void)
 
 void Usart1Receive_IDLE(void)
 {
-    uint32_t temp;
+    // uint32_t temp;
 
-    if((__HAL_UART_GET_FLAG(&huart1,UART_FLAG_IDLE) != RESET))
-    {
-        __HAL_UART_CLEAR_IDLEFLAG(&huart1);
-        HAL_UART_DMAStop(&huart1);
-        temp = huart1.hdmarx->Instance->CNDTR;
-        Usart1_RX.rx_len =  RECEIVELEN - temp;
-        Usart1_RX.receive_flag=1;
-        HAL_UART_Receive_DMA(&huart1,Usart1_RX.RX_Buf,RECEIVELEN);
-    }
+    // if((__HAL_UART_GET_FLAG(&huart1,UART_FLAG_IDLE) != RESET))
+    // {
+    //     __HAL_UART_CLEAR_IDLEFLAG(&huart1);
+    //     HAL_UART_DMAStop(&huart1);
+    //     temp = huart1.hdmarx->Instance->CNDTR;
+    //     Usart1_RX.rx_len =  RECEIVELEN - temp;
+    //     Usart1_RX.receive_flag=1;
+    //     HAL_UART_Receive_DMA(&huart1,Usart1_RX.RX_Buf,RECEIVELEN);
+    // }
 }
 
 void Usart1SendData(uint8_t *pdata, uint16_t Length)

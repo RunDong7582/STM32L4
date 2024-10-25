@@ -60,6 +60,10 @@ Core/Src/board/sensors/MX25L128.c\
 Core/Src/board/sensors/opt3001.c\
 Core/Src/board/lcd/ST7789v.c\
 Core/Src/board/lcd/XPT2046.c\
+Middlewares/Third_Party/FreeRTOS/Source/FreeRTOS_CLI.c\
+clipack/src/Sample-CLI-commands.c\
+clipack/src/serial.c\
+clipack/src/UARTCommandConsole.c\
 app/app.c\
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c \
@@ -154,11 +158,13 @@ AS_INCLUDES =  \
 
 # C includes
 C_INCLUDES =  \
--ICore/Inc \
+-Iclipack/inc\
+-ICore/Inc\
 -ICore/Inc/board/lcd\
 -ICore/Inc/board/sensors\
 -ICore/Inc/board\
 -ICore/Inc/common\
+-ICore/bsp/inc\
 -IDrivers/STM32L4xx_HAL_Driver/Inc \
 -IDrivers/STM32L4xx_HAL_Driver/Inc/Legacy \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \

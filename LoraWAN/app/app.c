@@ -102,15 +102,7 @@ void LoRaWAN_Func_Process(void)
             dev_stat = PRO_TRAINING_MODE;
             debug_printf("\r\n[Project Mode]\r\n");
         }
-		
-        debug_printf("LED is now flowing\r\n");
-        for(int k = 0; k <=3; k++)
-        {
-            HAL_GPIO_TogglePin(LED_PORT[k],LED_Pin[k]);
-            osDelay(200);
-        }
-				/* 你的实验代码位置 */
-
+    
     }
     break;
 
