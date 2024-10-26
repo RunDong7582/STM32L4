@@ -49,6 +49,10 @@
 #include "../../Core/Inc/gpio.h"
 #include "lorawan_node_driver.h"
 #include "app.h"
+#include "hdc1000.h"
+#include "opt3001.h"
+#include "MPL3115.h"
+#include "mma8451.h"
 
 #ifndef  configINCLUDE_TRACE_RELATED_CLI_COMMANDS
     #define configINCLUDE_TRACE_RELATED_CLI_COMMANDS    0
@@ -171,12 +175,20 @@ static const CLI_Command_Definition_t dataTransportMode =
     0 
 };
 
+// static const CLI_Command_Definition_t proTrainingMode =
+// {
+//     "pro_training", 
+//     "\r\npro_training: Enter Project Mode\r\n", 
+//     proTrainingModeCommand,
+//     0 
+// };
+// 命令定义
 static const CLI_Command_Definition_t proTrainingMode =
 {
-    "pro_training", 
-    "\r\npro_training: Enter Project Mode\r\n", 
+    "pro_training", /* The command string to type. */
+    "\r\npro_training <sensorType> <interval>:\r\n <sensor type>: temp humi lux press\r\n<interval> between 1s ~ 3s \r\n", 
     proTrainingModeCommand,
-    0 
+    2 /* Two parameters expected: index and state. */
 };
 
 /*
@@ -414,11 +426,73 @@ static BaseType_t proTrainingModeCommand(char *pcWriteBuffer, size_t xWriteBuffe
     ( void ) xWriteBufferLen;
     configASSERT( pcWriteBuffer );
     static DEVICE_MODE_T dev_stat = NO_MODE;
+    float temp;
+    float humi;
+    float press;
+    float lux;
+    const char *pcParameterSensorType, *pcParameterInterval;
+    BaseType_t xParameterStringLengthSensorType, xParameterStringLengthInterval;
 
-    if (dev_stat != PRO_TRAINING_MODE)
-    {
+    memset(pcWriteBuffer, 0x00, xWriteBufferLen);
+
+    UBaseType_t uxParameterNumber = 1;
+
+    pcParameterSensorType = FreeRTOS_CLIGetParameter(
+        pcCommandString, uxParameterNumber, &xParameterStringLengthSensorType);
+
+    uxParameterNumber++; 
+
+    pcParameterInterval = FreeRTOS_CLIGetParameter(
+        pcCommandString, uxParameterNumber, &xParameterStringLengthInterval);
+
+    if (pcParameterSensorType == NULL || pcParameterInterval == NULL) {
+        sprintf(pcWriteBuffer, "\r\ninvalid para\r\n");
+        return pdFALSE;
+    }
+
+    // 解析间隔
+    int interval = atoi(pcParameterInterval);
+
+    // 检查间隔值是否在有效范围内
+    if (interval < 1000 || interval > 6000) {
+        sprintf(pcWriteBuffer, "\r\ninvalid interval\r\n");
+        return pdFALSE;
+    }
+
+
+    // 设定设备状态为项目模式
+    if (dev_stat != PRO_TRAINING_MODE) {
         dev_stat = PRO_TRAINING_MODE;
-        sprintf(pcWriteBuffer, "\r\n[Project Mode]\r\n");
+        sprintf(pcWriteBuffer, "\r\n[start sample]\r\n");
+    }
+
+    if (strncmp(pcParameterSensorType, "lux", xParameterStringLengthSensorType) == 0)
+    {
+            lux  = OPT3001_Get_Lux();
+            HAL_Delay(interval);
+            sprintf(pcWriteBuffer, "\r\n The current lux:%d Lux\r\n",(int)lux);
+    } 
+    else if (strncmp(pcParameterSensorType, "pressure", xParameterStringLengthSensorType) == 0) 
+    {	
+            press = MPL3115_ReadPressure() / 1000.0;
+            HAL_Delay(interval);
+            sprintf(pcWriteBuffer, "\r\n The current pressure:%d kPa\r\n",(int)press);
+    } 
+    else if (strncmp(pcParameterSensorType, "temp", xParameterStringLengthSensorType) == 0) 
+    {
+            temp = HDC1000_Read_Temper() / 1000.0;
+            HAL_Delay(interval);
+            sprintf(pcWriteBuffer, "\r\n The current temp:%d \r\n",(int)temp);
+    } 
+    else if (strncmp(pcParameterSensorType, "humi" ,xParameterStringLengthSensorType) == 0) 
+    {
+            humi = HDC1000_Read_Humidi() / 1000.0;
+            HAL_Delay(interval);
+            sprintf(pcWriteBuffer, "\r\n The current humi:%d %%\r\n",(int)humi);
+    } 
+    else 
+    {
+        sprintf(pcWriteBuffer, "invalid sensor type: %s\r\n", pcParameterSensorType);
     }
 
     return pdFALSE; // 命令已成功处理
@@ -458,12 +532,12 @@ static BaseType_t ledCommand    (char *pcWriteBuffer, size_t xWriteBufferLen, co
     // Control LED based on the state parameter
     if (ledState == 1) {
         led_on(ledIndex);
-        sprintf(pcWriteBuffer, "LED %d turned ON\r\n", ledIndex);
+        sprintf(pcWriteBuffer, "\r\nLED %d turned ON\r\n", ledIndex);
     } else if (ledState == 0) {
         led_off(ledIndex);
-        sprintf(pcWriteBuffer, "LED %d turned OFF\r\n", ledIndex);
+        sprintf(pcWriteBuffer, "\r\nLED %d turned OFF\r\n", ledIndex);
     } else {
-        sprintf(pcWriteBuffer, "Invalid state: %d, use 1 for ON, 0 for OFF\r\n", ledState);
+        sprintf(pcWriteBuffer, "\r\nInvalid state: %d, use 1 for ON, 0 for OFF\r\n", ledState);
     }
 
     // Reset the parameter number for the next call
@@ -481,8 +555,11 @@ static BaseType_t cliToggleLed  (char *pcWriteBuffer, size_t xWriteBufferLen, co
     ( void ) xWriteBufferLen;
     configASSERT( pcWriteBuffer );
 
-
-     HAL_GPIO_TogglePin(LED6_GPIO_Port,LED6_Pin);
+    for (int k = 0; k <=3 ; k++)
+    {
+        HAL_GPIO_TogglePin(LED_PORT[k],LED_Pin[k]);
+        HAL_Delay(100);
+    }
 
 
 	sprintf(pcWriteBuffer, "  LED was toggled\r\n");

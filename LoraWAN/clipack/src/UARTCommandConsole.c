@@ -137,8 +137,8 @@ static void prvUARTCommandConsoleTask( void * pvParameters )
         /* Ensure exclusive access to the UART Tx. */
         if( xSemaphoreTake( xTxMutex, cmdMAX_MUTEX_WAIT ) == pdPASS )
         {
-            /* Echo the character back. */
-            xSerialPutChar( xPort, cRxedChar, portMAX_DELAY );
+            // /* Echo the character back. */
+            // xSerialPutChar( xPort, cRxedChar, portMAX_DELAY );
 
 
             /* Was it the end of the line? */
@@ -172,8 +172,8 @@ static void prvUARTCommandConsoleTask( void * pvParameters )
                  * sent.  Clear the input string ready to receive the next command.
                  * Remember the command that was just processed first in case it is
                  * to be processed again. */
-                strcpy( cLastInputString, cInputString);
-                // strncpy( cLastInputString, cInputString, cmdMAX_INPUT_SIZE);
+                // strcpy( cLastInputString, cInputString);
+                strncpy( cLastInputString, cInputString, cmdMAX_INPUT_SIZE);
                 ucInputIndex = 0;
                 memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
