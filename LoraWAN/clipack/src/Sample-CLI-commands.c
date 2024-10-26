@@ -45,6 +45,9 @@
 /* FreeRTOS+CLI includes. */
 #include "FreeRTOS_CLI.h"
 
+/* periph header */
+#include "../../Core/Inc/gpio.h"
+
 #ifndef  configINCLUDE_TRACE_RELATED_CLI_COMMANDS
     #define configINCLUDE_TRACE_RELATED_CLI_COMMANDS    0
 #endif
@@ -53,17 +56,43 @@
     #define configINCLUDE_QUERY_HEAP_COMMAND    0
 #endif
 
+#define NUM_LEDS 4
+
 /*
  * The function that registers the commands that are defined within this file.
  */
 void vRegisterSampleCLICommands( void );
 
+char clearScreen[] = "\033[2J"; /* VT100 escape sequence to clear the screen */
+char resetCursor[] = "\033[H";  /* VT100 escape sequence to set cursor to upper left corner */
 /*
- * Implements the task-stats command.
+ *  LED_Control
+ */
+static BaseType_t ledCommand( char *pcWriteBuffer, 
+                              size_t xWriteBufferLen, 
+                              const char *pcCommandString );
+/*
+ *  Implements the task-stats command.
  */
 static BaseType_t prvTaskStatsCommand( char * pcWriteBuffer,
                                        size_t xWriteBufferLen,
                                        const char * pcCommandString );
+
+static BaseType_t cliToggleLed       (  char *pcWriteBuffer, 
+                                        size_t xWriteBufferLen, 
+                                        const char *pcCommandString);
+
+static BaseType_t cliTurnOnLed       (  char *pcWriteBuffer, 
+                                        size_t xWriteBufferLen, 
+                                        const char *pcCommandString);
+
+static BaseType_t cliTurnOffLed      (  char *pcWriteBuffer, 
+                                        size_t xWriteBufferLen, 
+                                        const char *pcCommandString);
+
+static BaseType_t cliClearScreen     (  char *pcWriteBuffer, 
+                                        size_t xWriteBufferLen, 
+                                        const char *pcCommandString);
 
 /*
  * Implements the run-time-stats command.
@@ -106,6 +135,50 @@ static BaseType_t prvParameterEchoCommand( char * pcWriteBuffer,
                                                 const char * pcCommandString );
 #endif
 
+/*
+        LED Command
+*/
+/*-----------------------------------------------------------*/
+static const CLI_Command_Definition_t xled =
+{
+    "led", /* The command string to type. */
+    "\r\nled <index> <state>:\r\n Control LED. Index 0-3, State 1=ON, 0=OFF\r\n",
+    ledCommand, /* The function to run. */
+    2 /* Two parameters expected: index and state. */
+};
+
+/*-----------------------------------------------------------*/
+static const CLI_Command_Definition_t toggleLedCmd =
+{
+    "toggleLed",
+	"\r\ntoggleLed:\r\n toggles the blue led\r\n",
+	cliToggleLed,
+    0
+};
+/*------------------------------------------------------------*/
+static const CLI_Command_Definition_t turnOnLedCmd  =
+{
+    "turnOnLed",
+	"\r\nturnOnLed <led-color>:\r\n turn on led <blue>, <red>, <yellow> or <white>\r\n",
+	cliTurnOnLed,
+    1
+};
+/*------------------------------------------------------------*/
+static const CLI_Command_Definition_t turnOffLedCmd =
+{
+    "turnOffLed",
+	"\r\nturnOffLed <led-color>:\r\n turn off led <blue>, <red>, <yellow> or <white>\r\n",
+	cliTurnOffLed,
+    1
+};
+/*-------------------------------------------------------------*/
+static const CLI_Command_Definition_t clearScreenCmd =
+{
+    "clear",
+	"\r\nclear:\r\n clear the screen if terminal supports VT100\r\n",
+	cliClearScreen,
+    0
+};
 /* Structure that defines the "task-stats" command line command.  This generates
  * a table that gives information on each task in the system. */
 static const CLI_Command_Definition_t xTaskStats =
@@ -181,9 +254,14 @@ void vRegisterSampleCLICommands( void )
 {
     /* Register all the command line commands defined immediately above. */
     FreeRTOS_CLIRegisterCommand( &xTaskStats );
-    FreeRTOS_CLIRegisterCommand( &xThreeParameterEcho );
-    FreeRTOS_CLIRegisterCommand( &xParameterEcho );
-
+    // FreeRTOS_CLIRegisterCommand( &xThreeParameterEcho );
+    // FreeRTOS_CLIRegisterCommand( &xParameterEcho );
+    FreeRTOS_CLIRegisterCommand( &xled );
+	FreeRTOS_CLIRegisterCommand( &toggleLedCmd   );
+	FreeRTOS_CLIRegisterCommand( &turnOnLedCmd   );
+	FreeRTOS_CLIRegisterCommand( &turnOffLedCmd  );
+	FreeRTOS_CLIRegisterCommand( &clearScreenCmd );
+    
     #if ( configGENERATE_RUN_TIME_STATS == 1 )
     {
         FreeRTOS_CLIRegisterCommand( &xRunTimeStats );
@@ -201,6 +279,159 @@ void vRegisterSampleCLICommands( void )
         FreeRTOS_CLIRegisterCommand( &xStartStopTrace );
     }
     #endif
+}
+/*-----------------------------------------------------------*/
+static BaseType_t ledCommand    (char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+    const char *pcParameterIndex, *pcParameterState;
+    BaseType_t xParameterStringLengthIndex, xParameterStringLengthState;
+    static UBaseType_t uxParameterNumber = 1; // Start with the first parameter
+
+    // Sanity checks and clear write buffer
+    (void) pcCommandString;
+    configASSERT(pcWriteBuffer);
+    memset(pcWriteBuffer, 0x00, xWriteBufferLen);
+
+    // Get the LED index parameter
+    pcParameterIndex = FreeRTOS_CLIGetParameter(
+        pcCommandString, uxParameterNumber, &xParameterStringLengthIndex);
+
+    uxParameterNumber++; // Move to the next parameter
+
+    // Get the LED state parameter
+    pcParameterState = FreeRTOS_CLIGetParameter(
+        pcCommandString, uxParameterNumber, &xParameterStringLengthState);
+
+    // Parse parameters
+    int ledIndex = atoi(pcParameterIndex);
+    int ledState = atoi(pcParameterState);
+
+    if (ledIndex < 0 || ledIndex >= NUM_LEDS) {
+        // sprintf(pcWriteBuffer, "Invalid LED index: %d\r\n", ledIndex);
+        return pdFALSE; // Command handled, return to CLI
+    }
+
+    // Control LED based on the state parameter
+    if (ledState == 1) {
+        led_on(ledIndex);
+        sprintf(pcWriteBuffer, "LED %d turned ON\r\n", ledIndex);
+    } else if (ledState == 0) {
+        led_off(ledIndex);
+        sprintf(pcWriteBuffer, "LED %d turned OFF\r\n", ledIndex);
+    } else {
+        sprintf(pcWriteBuffer, "Invalid state: %d, use 1 for ON, 0 for OFF\r\n", ledState);
+    }
+
+    // Reset the parameter number for the next call
+    uxParameterNumber = 1;
+
+    return pdFALSE;
+}
+/*----------------------------------------------------------*/
+static BaseType_t cliToggleLed  (char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+    /* Remove compile time warnings about unused parameters, and check the
+     * write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+     * write buffer length is adequate, so does not check for buffer overflows. */
+    ( void ) pcCommandString;
+    ( void ) xWriteBufferLen;
+    configASSERT( pcWriteBuffer );
+
+
+     HAL_GPIO_TogglePin(LED6_GPIO_Port,LED6_Pin);
+
+
+	sprintf(pcWriteBuffer, "  LED was toggled\r\n");
+
+    return pdFALSE;
+}
+
+/*----------------------------------------------------------*/
+static BaseType_t cliTurnOnLed  (char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+	char *pcParameter1;
+	BaseType_t xParameter1StringLength, xResult;
+
+	/* Obtain the name of the source file, and the length of its name, from
+	    the command string. The name of the source file is the first parameter. */
+	    pcParameter1 = FreeRTOS_CLIGetParameter
+	                        (
+	                          /* The command string itself. */
+	                          pcCommandString,
+	                          /* Return the first parameter. */
+	                          1,
+	                          /* Store the parameter string length. */
+	                          &xParameter1StringLength
+	                        );
+
+	if (strncmp(pcParameter1,"blue",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED11_GPIO_Port, LED11_Pin, GPIO_PIN_RESET);
+	}
+	else if (strncmp(pcParameter1,"yellow",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, GPIO_PIN_RESET);
+	}
+	else if (strncmp(pcParameter1,"red",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, GPIO_PIN_RESET);
+	}
+	else if (strncmp(pcParameter1,"white",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, GPIO_PIN_RESET);
+	}
+
+    sprintf(pcWriteBuffer, "  %s LED was turned on\r\n", pcParameter1);
+
+    return pdFALSE;
+}
+
+static BaseType_t cliTurnOffLed(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+	char *pcParameter1;
+	BaseType_t xParameter1StringLength, xResult;
+
+	/* Obtain the name of the source file, and the length of its name, from
+	    the command string. The name of the source file is the first parameter. */
+	    pcParameter1 = FreeRTOS_CLIGetParameter
+	                        (
+	                          /* The command string itself. */
+	                          pcCommandString,
+	                          /* Return the first parameter. */
+	                          1,
+	                          /* Store the parameter string length. */
+	                          &xParameter1StringLength
+	                        );
+
+	if (strncmp(pcParameter1,"blue",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED11_GPIO_Port, LED11_Pin, GPIO_PIN_SET);
+	}
+	else if (strncmp(pcParameter1,"yellow",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, GPIO_PIN_SET);
+	}
+	else if (strncmp(pcParameter1,"red",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, GPIO_PIN_SET);
+	}
+	else if (strncmp(pcParameter1,"white",xParameter1StringLength) == 0)
+	{
+		  HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, GPIO_PIN_SET);
+	}
+
+    sprintf(pcWriteBuffer, "  %s LED was turned off\r\n", pcParameter1);
+
+    return pdFALSE;
+}
+
+static BaseType_t cliClearScreen(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+    (void) xWriteBufferLen;
+
+	sprintf(pcWriteBuffer, "%s %s", clearScreen, resetCursor);
+
+    return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
@@ -237,7 +468,7 @@ static BaseType_t prvTaskStatsCommand( char * pcWriteBuffer,
     }
 
     strcpy( pcWriteBuffer, pcHeader );
-    // vTaskList( pcWriteBuffer + strlen( pcHeader ) );
+    vTaskList( pcWriteBuffer + strlen( pcHeader ) );
 
     /* There is no more data to return after this single string, so return
      * pdFALSE. */

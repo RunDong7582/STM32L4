@@ -42,13 +42,13 @@
 
 /* Demo application includes. */
 #include "serial.h"
-
+#include "usart.h"
 /* Dimensions the buffer into which input characters are placed. */
 #define cmdMAX_INPUT_SIZE          50
 
 /* Dimensions a buffer to be used by the UART driver, if the UART driver uses a
  * buffer at all. */
-#define cmdQUEUE_LENGTH            25
+#define cmdQUEUE_LENGTH            1024
 
 /* DEL acts as a backspace. */
 #define cmdASCII_DEL               ( 0x7F )
@@ -140,8 +140,9 @@ static void prvUARTCommandConsoleTask( void * pvParameters )
             /* Echo the character back. */
             xSerialPutChar( xPort, cRxedChar, portMAX_DELAY );
 
+
             /* Was it the end of the line? */
-            if( ( cRxedChar == '\n' ) || ( cRxedChar == '\r' ) )
+            if( ( cRxedChar == '\n' ) || ( cRxedChar == '\r') )
             {
                 /* Just to space the output from the input. */
                 vSerialPutString( xPort, ( signed char * ) pcNewLine, ( unsigned short ) strlen( pcNewLine ) );
@@ -171,7 +172,8 @@ static void prvUARTCommandConsoleTask( void * pvParameters )
                  * sent.  Clear the input string ready to receive the next command.
                  * Remember the command that was just processed first in case it is
                  * to be processed again. */
-                strcpy( cLastInputString, cInputString );
+                strcpy( cLastInputString, cInputString);
+                // strncpy( cLastInputString, cInputString, cmdMAX_INPUT_SIZE);
                 ucInputIndex = 0;
                 memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 

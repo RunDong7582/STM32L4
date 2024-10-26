@@ -125,6 +125,10 @@ void MX_GPIO_Init(void);
 /* USER CODE BEGIN Prototypes */
 void gpio_into_sleep(void);
 void gpio_into_wakeup(void);
+// Function prototypes for LED control
+void led_on(int index);
+void led_off(int index);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

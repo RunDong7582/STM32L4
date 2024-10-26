@@ -39,7 +39,11 @@
 /* Demo application includes. */
 #include "serial.h"
 #include "usart.h"
+#include "gpio.h"
 /*-----------------------------------------------------------*/
+
+uint8_t buff_index = 0;  
+uint8_t data_len = 0; 
 
 /* Misc defines. */
 #define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
@@ -74,9 +78,9 @@ xComPortHandle xReturn;
 	hardware. */
 	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
 	{
-		/* 修改：初始化未使用的串口1，用于处理接收PC段的命令行 */
+		/* 修改：再次初始化的串口2，用于处理接收PC段的命令行 */
 		MX_USART2_Init(115200);	
-		Clear_UART1_IT();
+		USART2_Clear_IT(); 
 	}
 	else
 	{
@@ -139,9 +143,9 @@ signed portBASE_TYPE xReturn;
 	{
 		xReturn = pdPASS;
 		uint8_t cChar;
-    	/*修改：发送队列中有数据，通过轮询方式发送出去 */
 		if(xQueueReceive(xCharsForTx, &cChar, 0) == pdTRUE) 
 		{
+			// while(HAL_UART_Transmit_IT(&huart2, &cChar, 1) != HAL_OK );
 			if((HAL_UART_GetState(&huart2) & HAL_UART_STATE_BUSY_TX) != HAL_UART_STATE_BUSY_TX) {
 				HAL_UART_Transmit(&huart2, &cChar, 1, 1000); //轮询方式将数据发送出去
 			}
@@ -161,6 +165,7 @@ void vSerialClose( xComPortHandle xPort )
 	/* Not supported as not required by the demo application. */
 }
 /*-----------------------------------------------------------*/
+
 
 void vUARTInterruptHandler( void )
 {
@@ -183,6 +188,26 @@ void vUARTInterruptHandler( void )
   	portYIELD_FROM_ISR(pxHigherPriorityTaskWoken);
 }
 
+void UART2_IDLECallback(UART_HandleTypeDef* huart)  
+{  
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE; 
+	if((__HAL_UART_GET_FLAG(&huart2,UART_FLAG_IDLE) != RESET))
+    {
+        __HAL_UART_CLEAR_IDLEFLAG(&huart2);
+		HAL_UART_DMAStop(&huart2);  // 停止本次DMA传输  
+		data_len = RECEIVELEN - __HAL_DMA_GET_COUNTER(huart2.hdmarx);  // 计算接收到的数据长度  
+		Usart2_RX.RX_Buf[data_len] = '/0';  
+ 		Usart2_RX.receive_flag=1;
+		 Usart2_RX.rx_len =  data_len;
+		for (uint8_t i = 0; i < data_len; i++)  
+		{  	    	
+			xQueueSendFromISR(xRxedChars, &Usart2_RX.RX_Buf[i], &xHigherPriorityTaskWoken);  
+		}  
+	}
+	HAL_UART_Receive_DMA(&huart2, (uint8_t*)Usart2_RX.RX_Buf, RECEIVELEN);  // 重启开始DMA传输 每次255字节数据  
+	HAL_UART_IRQHandler(&huart2);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);  
+}
 
 
 

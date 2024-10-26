@@ -39,8 +39,13 @@
 #include "usart.h"
 #include "rtc.h"
 #include "tim.h"
-#include "gpio.h"
+#include "../inc/gpio.h"
 #include "app.h"
+
+#include "task.h"
+#include "FreeRTOS_CLI.h"
+#include "serial.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,7 +60,6 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -95,11 +99,6 @@ const osThreadAttr_t LEDTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for QueueUart1 */
-osMessageQueueId_t QueueUart1Handle;
-const osMessageQueueAttr_t QueueUart1_attributes = {
-  .name = "QueueUart1"
-};
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
@@ -136,10 +135,6 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-
-  /* creation of QueueUart1 */
-  QueueUart1Handle = osMessageQueueNew (16, 128, &QueueUart1_attributes);
-
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -175,8 +170,6 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-
-  /* Infinite loop */
   for(;;)
   {
       osDelay(1);
@@ -254,17 +247,14 @@ void StartLEDTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    for(int k = 0; k <4 ; k++)
-    {
-        HAL_GPIO_TogglePin(LED_PORT[k],LED_Pin[k]);
-        osDelay(pdMS_TO_TICKS(500));
-    }
+    osDelay(1);
   }
   /* USER CODE END StartLEDTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+/* user defined command example */
 
 /* USER CODE END Application */
 

@@ -231,26 +231,26 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /* USART1 DMA Init */
-    /* USART1_RX Init */
-    hdma_usart1_rx.Instance = DMA1_Channel5;
-    hdma_usart1_rx.Init.Request = DMA_REQUEST_2;
-    hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
-    hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-    hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_usart1_rx.Init.Mode = DMA_NORMAL;
-    hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
-    if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    // /* USART1 DMA Init */
+    // /* USART1_RX Init */
+    // hdma_usart1_rx.Instance = DMA1_Channel5;
+    // hdma_usart1_rx.Init.Request = DMA_REQUEST_2;
+    // hdma_usart1_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    // hdma_usart1_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    // hdma_usart1_rx.Init.MemInc = DMA_MINC_ENABLE;
+    // hdma_usart1_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    // hdma_usart1_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    // hdma_usart1_rx.Init.Mode = DMA_NORMAL;
+    // hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
+    // if (HAL_DMA_Init(&hdma_usart1_rx) != HAL_OK)
+    // {
+    //   Error_Handler();
+    // }
 
-    __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
+    // __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart1_rx);
 
     /* USART1 interrupt Init */
-    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(USART1_IRQn, 15, 0);
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
@@ -305,7 +305,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart2_rx);
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 6, 3);
+    HAL_NVIC_SetPriority(USART2_IRQn, 15, 0);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -437,6 +437,26 @@ void usart2_send_numbers(uint8_t data)
     usart2_send_onenumber(tmpl);
 }
 
+void bsp_usart_USART2_Init(void)
+{
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+	__HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE); //使能串口空闲中断
+  HAL_UART_Receive_DMA(&huart2, Usart2_RX.RX_Buf, RECEIVELEN); //开启串口DMA接收
+}
+
+
 void USART2_Clear_IT(void)
 {
     __HAL_UART_CLEAR_FLAG(&huart2,UART_FLAG_IDLE);               //清除空闲中断标志
@@ -467,17 +487,17 @@ void usart2_receive_idle(void)
 
 void Usart1Receive_IDLE(void)
 {
-    // uint32_t temp;
+    uint32_t temp;
 
-    // if((__HAL_UART_GET_FLAG(&huart1,UART_FLAG_IDLE) != RESET))
-    // {
-    //     __HAL_UART_CLEAR_IDLEFLAG(&huart1);
-    //     HAL_UART_DMAStop(&huart1);
-    //     temp = huart1.hdmarx->Instance->CNDTR;
-    //     Usart1_RX.rx_len =  RECEIVELEN - temp;
-    //     Usart1_RX.receive_flag=1;
-    //     HAL_UART_Receive_DMA(&huart1,Usart1_RX.RX_Buf,RECEIVELEN);
-    // }
+    if((__HAL_UART_GET_FLAG(&huart1,UART_FLAG_IDLE) != RESET))
+    {
+        __HAL_UART_CLEAR_IDLEFLAG(&huart1);
+        HAL_UART_DMAStop(&huart1);
+        temp = huart1.hdmarx->Instance->CNDTR;
+        Usart1_RX.rx_len =  RECEIVELEN - temp;
+        Usart1_RX.receive_flag=1;
+        HAL_UART_Receive_DMA(&huart1,Usart1_RX.RX_Buf,RECEIVELEN);
+    }
 }
 
 void Usart1SendData(uint8_t *pdata, uint16_t Length)

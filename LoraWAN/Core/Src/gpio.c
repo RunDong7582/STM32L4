@@ -241,5 +241,12 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
+// Function prototypes for LED control
+void led_on(int index) {
+    HAL_GPIO_WritePin(LED_PORT[index], LED_Pin[index], GPIO_PIN_RESET); // Assuming active low
+}
 
+void led_off(int index) {
+    HAL_GPIO_WritePin(LED_PORT[index], LED_Pin[index], GPIO_PIN_SET);
+}
 /* USER CODE END 2 */

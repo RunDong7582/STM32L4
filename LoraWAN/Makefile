@@ -53,7 +53,6 @@ Core/Src/board/key.c\
 Core/Src/board/lorawan_node_driver.c\
 Core/Src/board/sensors_test.c\
 Core/Src/board/sensors/hdc1000.c\
-Core/Src/board/sensors/max7q.c\
 Core/Src/board/sensors/mma8451.c\
 Core/Src/board/sensors/mpl3115.c\
 Core/Src/board/sensors/MX25L128.c\

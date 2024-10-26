@@ -277,8 +277,7 @@ void EXTI9_5_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
-  Usart1Receive_IDLE();
+  // Usart1Receive_IDLE();
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
@@ -292,9 +291,11 @@ void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
   // usart2_receive_idle();
-  /* USER CODE END USART2_IRQn 0 */
-  // HAL_UART_IRQHandler(&huart2);
+  // UART2_IDLECallback(&huart2);
   vUARTInterruptHandler();
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  // vUARTInterruptHandler();
   /* USER CODE BEGIN USART2_IRQn 1 */
 
   /* USER CODE END USART2_IRQn 1 */

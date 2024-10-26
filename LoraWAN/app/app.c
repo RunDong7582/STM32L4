@@ -10,7 +10,7 @@
 extern DEVICE_MODE_T device_mode;
 extern DEVICE_MODE_T *Device_Mode_str;
 GPIO_TypeDef *LED_PORT[4] = {LED6_GPIO_Port, LED7_GPIO_Port, LED8_GPIO_Port, LED11_GPIO_Port};
-GPIO_TypeDef *LED_Pin[4] = {LED6_Pin,       LED7_Pin,       LED8_Pin,       LED11_Pin};
+GPIO_TypeDef *LED_Pin[4]  = {LED6_Pin,       LED7_Pin,       LED8_Pin,       LED11_Pin};
 
 down_list_t *pphead = NULL;
 

@@ -49,7 +49,8 @@ build/freertos.o: Core/Src/freertos.c \
  Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h \
  Core/Inc/stm32l4xx_it.h Core/Inc/board/lorawan_node_driver.h \
  Core/Inc/usart.h Core/Inc/common/common.h Core/Inc/dma.h Core/Inc/i2c.h \
- Core/Inc/rtc.h Core/Inc/tim.h Core/Inc/app.h
+ Core/Inc/rtc.h Core/Inc/tim.h Core/Src/../inc/gpio.h Core/Inc/app.h \
+ clipack/inc/FreeRTOS_CLI.h clipack/inc/serial.h
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
@@ -113,4 +114,7 @@ Core/Inc/dma.h:
 Core/Inc/i2c.h:
 Core/Inc/rtc.h:
 Core/Inc/tim.h:
+Core/Src/../inc/gpio.h:
 Core/Inc/app.h:
+clipack/inc/FreeRTOS_CLI.h:
+clipack/inc/serial.h:

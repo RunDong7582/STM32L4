@@ -136,6 +136,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   vRegisterSampleCLICommands();
   vUARTCommandConsoleStart( 512, 1 );
+  
   /* USER CODE END 2 */
 
   /* Init scheduler */

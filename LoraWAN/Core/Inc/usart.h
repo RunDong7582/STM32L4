@@ -98,6 +98,7 @@ extern UART_HandleTypeDef huart2;
 
     void MX_LPUART1_Init(uint32_t baudrate);
     void MX_USART2_Init(uint32_t baudrate);
+    void bsp_usart_USART2_Init(void);
 
     void MX_USART1_Init(uint32_t baudrate);
 
