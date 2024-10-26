@@ -123,11 +123,11 @@ void LoRaWAN_Borad_Info_Print(void)
     debug_printf("\r\n\r\n");
     PRINT_CODE_VERSION_INFO("%s",CODE_VERSION);
     debug_printf("\r\n");
-    debug_printf("--> Press Key1 to: \r\n");
-    debug_printf("-->  - Enter command Mode\r\n");
-    debug_printf("-->  - Enter Transparent Mode\r\n");
-    debug_printf("--> Press Key2 to: \r\n");
-    debug_printf("-->  - Enter Project Trainning Mode\r\n");
+    // debug_printf("--> Press Key1 to: \r\n");
+    // debug_printf("-->  - Enter command Mode\r\n");
+    // debug_printf("-->  - Enter Transparent Mode\r\n");
+    // debug_printf("--> Press Key2 to: \r\n");
+    // debug_printf("-->  - Enter Project Trainning Mode\r\n");
     LEDALL_ON;
     HAL_Delay(100);
     LEDALL_OFF;

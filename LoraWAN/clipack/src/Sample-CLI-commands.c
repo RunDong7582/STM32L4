@@ -47,6 +47,8 @@
 
 /* periph header */
 #include "../../Core/Inc/gpio.h"
+#include "lorawan_node_driver.h"
+#include "app.h"
 
 #ifndef  configINCLUDE_TRACE_RELATED_CLI_COMMANDS
     #define configINCLUDE_TRACE_RELATED_CLI_COMMANDS    0
@@ -65,6 +67,8 @@ void vRegisterSampleCLICommands( void );
 
 char clearScreen[] = "\033[2J"; /* VT100 escape sequence to clear the screen */
 char resetCursor[] = "\033[H";  /* VT100 escape sequence to set cursor to upper left corner */
+
+extern down_list_t *pphead;
 /*
  *  LED_Control
  */
@@ -93,6 +97,18 @@ static BaseType_t cliTurnOffLed      (  char *pcWriteBuffer,
 static BaseType_t cliClearScreen     (  char *pcWriteBuffer, 
                                         size_t xWriteBufferLen, 
                                         const char *pcCommandString);
+
+static BaseType_t cmdConfigModeCommand      (   char *pcWriteBuffer, 
+                                                size_t xWriteBufferLen, 
+                                                const char *pcCommandString);  
+
+static BaseType_t dataTransportModeCommand  (   char *pcWriteBuffer, 
+                                                size_t xWriteBufferLen, 
+                                                const char *pcCommandString);
+
+static BaseType_t proTrainingModeCommand    (   char *pcWriteBuffer, 
+                                                size_t xWriteBufferLen, 
+                                                const char *pcCommandString);                                                                 
 
 /*
  * Implements the run-time-stats command.
@@ -134,6 +150,34 @@ static BaseType_t prvParameterEchoCommand( char * pcWriteBuffer,
                                                 size_t xWriteBufferLen,
                                                 const char * pcCommandString );
 #endif
+
+/*
+ *      Lora Wan mode
+ * 
+ */
+static const CLI_Command_Definition_t cmdConfigMode =
+{
+    "cmd_config", 
+    "\r\ncmd_config: Enter Command Mode\r\n", 
+    cmdConfigModeCommand, 
+    0 
+};
+
+static const CLI_Command_Definition_t dataTransportMode =
+{
+    "data_transport", 
+    "\r\ndata_transport: Enter Data Transport Mode\r\n", 
+    dataTransportModeCommand, 
+    0 
+};
+
+static const CLI_Command_Definition_t proTrainingMode =
+{
+    "pro_training", 
+    "\r\npro_training: Enter Project Mode\r\n", 
+    proTrainingModeCommand,
+    0 
+};
 
 /*
         LED Command
@@ -262,6 +306,10 @@ void vRegisterSampleCLICommands( void )
 	FreeRTOS_CLIRegisterCommand( &turnOffLedCmd  );
 	FreeRTOS_CLIRegisterCommand( &clearScreenCmd );
     
+    FreeRTOS_CLIRegisterCommand(&cmdConfigMode);
+    FreeRTOS_CLIRegisterCommand(&dataTransportMode);
+    FreeRTOS_CLIRegisterCommand(&proTrainingMode);
+    
     #if ( configGENERATE_RUN_TIME_STATS == 1 )
     {
         FreeRTOS_CLIRegisterCommand( &xRunTimeStats );
@@ -280,6 +328,102 @@ void vRegisterSampleCLICommands( void )
     }
     #endif
 }
+/*-----------------------------------------------------------*/
+static BaseType_t cmdConfigModeCommand(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+    ( void ) pcCommandString;
+    ( void ) xWriteBufferLen;
+    configASSERT( pcWriteBuffer );
+    static DEVICE_MODE_T dev_stat = NO_MODE;
+
+    // 如果当前模式不是指令模式
+    if (dev_stat != CMD_CONFIG_MODE)
+    {
+        dev_stat = CMD_CONFIG_MODE;
+        sprintf(pcWriteBuffer, "\r\n[Command Mode]\r\n");
+
+        nodeGpioConfig(wake, wakeup);
+        nodeGpioConfig(mode, command);
+    }
+
+    // 等待 USART2 产生中断
+    if (UART_TO_PC_RECEIVE_FLAG)
+    {
+        UART_TO_PC_RECEIVE_FLAG = 0;
+        lpusart1_send_data(UART_TO_PC_RECEIVE_BUFFER, UART_TO_PC_RECEIVE_LENGTH);
+    }
+
+    // 等待 LPUART1 产生中断
+    if (UART_TO_LRM_RECEIVE_FLAG)
+    {
+        UART_TO_LRM_RECEIVE_FLAG = 0;
+        usart2_send_data(UART_TO_LRM_RECEIVE_BUFFER, UART_TO_LRM_RECEIVE_LENGTH);
+    }
+
+    return pdFALSE;
+}
+
+static BaseType_t dataTransportModeCommand(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+    ( void ) pcCommandString;
+    ( void ) xWriteBufferLen;
+    configASSERT( pcWriteBuffer );
+    static DEVICE_MODE_T dev_stat = NO_MODE;
+    uint16_t temper = 0;
+
+    // 如果当前模式不是透传模式
+    if (dev_stat != DATA_TRANSPORT_MODE)
+    {
+        dev_stat = DATA_TRANSPORT_MODE;
+        sprintf(pcWriteBuffer, "\r\n[Transparent Mode]\r\n");
+        // 模块入网判断
+        if (nodeJoinNet(JOIN_TIME_120_SEC) == false)
+        {
+            return pdTRUE; // 模块未入网，返回
+        }
+
+        temper = HDC1000_Read_Temper() / 1000;
+        nodeDataCommunicate((uint8_t*)&temper, sizeof(temper), &pphead);
+    }
+
+    // 等待 USART2 产生中断
+    if (UART_TO_PC_RECEIVE_FLAG && GET_BUSY_LEVEL) // 确保模块在空闲状态
+    {
+        UART_TO_PC_RECEIVE_FLAG = 0;
+        nodeDataCommunicate((uint8_t*)UART_TO_PC_RECEIVE_BUFFER, UART_TO_PC_RECEIVE_LENGTH, &pphead);
+    }
+    else if (UART_TO_PC_RECEIVE_FLAG && (GET_BUSY_LEVEL == 0))
+    {
+        UART_TO_PC_RECEIVE_FLAG = 0;
+        sprintf(pcWriteBuffer, "--> Warning: Don't send data now! Module is busy!\r\n");
+    }
+
+    // 等待 LPUART1 产生中断
+    if (UART_TO_LRM_RECEIVE_FLAG)
+    {
+        UART_TO_LRM_RECEIVE_FLAG = 0;
+        usart2_send_data(UART_TO_LRM_RECEIVE_BUFFER, UART_TO_LRM_RECEIVE_LENGTH);
+    }
+
+    return pdFALSE;
+}
+
+static BaseType_t proTrainingModeCommand(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+    ( void ) pcCommandString;
+    ( void ) xWriteBufferLen;
+    configASSERT( pcWriteBuffer );
+    static DEVICE_MODE_T dev_stat = NO_MODE;
+
+    if (dev_stat != PRO_TRAINING_MODE)
+    {
+        dev_stat = PRO_TRAINING_MODE;
+        sprintf(pcWriteBuffer, "\r\n[Project Mode]\r\n");
+    }
+
+    return pdFALSE; // 命令已成功处理
+}
+
 /*-----------------------------------------------------------*/
 static BaseType_t ledCommand    (char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {

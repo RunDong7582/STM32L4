@@ -190,7 +190,6 @@ void StartLoraWTask(void *argument)
   /* Infinite loop */
   for(;;)
   {                                                                                                                                                                                                                                                              
-    LoRaWAN_Func_Process();
     osDelay(1);
   }
   /* USER CODE END StartLoraWTask */

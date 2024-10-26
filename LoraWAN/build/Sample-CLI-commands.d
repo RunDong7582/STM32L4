@@ -40,7 +40,9 @@ build/Sample-CLI-commands.o: clipack/src/Sample-CLI-commands.c \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
+ Core/Inc/board/lorawan_node_driver.h Core/Inc/usart.h Core/Inc/main.h \
+ Core/Inc/gpio.h Core/Inc/common/common.h Core/Inc/app.h
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
@@ -86,3 +88,9 @@ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
+Core/Inc/board/lorawan_node_driver.h:
+Core/Inc/usart.h:
+Core/Inc/main.h:
+Core/Inc/gpio.h:
+Core/Inc/common/common.h:
+Core/Inc/app.h:
