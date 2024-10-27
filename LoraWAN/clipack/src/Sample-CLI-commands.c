@@ -71,8 +71,14 @@ void vRegisterSampleCLICommands( void );
 
 char clearScreen[] = "\033[2J"; /* VT100 escape sequence to clear the screen */
 char resetCursor[] = "\033[H";  /* VT100 escape sequence to set cursor to upper left corner */
+char name[] = "\r\nChen Xuan run\r\n";
 
 extern down_list_t *pphead;
+
+static BaseType_t getname_Command(  char *pcWriteBuffer, 
+                                    size_t xWriteBufferLen, 
+                                    const char *pcCommandString );
+
 /*
  *  LED_Control
  */
@@ -154,6 +160,18 @@ static BaseType_t prvParameterEchoCommand( char * pcWriteBuffer,
                                                 size_t xWriteBufferLen,
                                                 const char * pcCommandString );
 #endif
+
+/*
+ *      class test 
+ * 
+*/
+static const CLI_Command_Definition_t getnamecmd = 
+{
+    "getname_cmd", 
+    "\r\ngetname_cmd: please input your name\r\n", 
+    getname_Command, 
+    0 
+};
 
 /*
  *      Lora Wan mode
@@ -322,6 +340,8 @@ void vRegisterSampleCLICommands( void )
     FreeRTOS_CLIRegisterCommand(&dataTransportMode);
     FreeRTOS_CLIRegisterCommand(&proTrainingMode);
     
+    FreeRTOS_CLIRegisterCommand(&getnamecmd);
+
     #if ( configGENERATE_RUN_TIME_STATS == 1 )
     {
         FreeRTOS_CLIRegisterCommand( &xRunTimeStats );
@@ -339,6 +359,16 @@ void vRegisterSampleCLICommands( void )
         FreeRTOS_CLIRegisterCommand( &xStartStopTrace );
     }
     #endif
+}
+/*------------------------------------------------------------*/
+static BaseType_t getname_Command(  char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+{
+    ( void ) pcCommandString;
+    ( void ) xWriteBufferLen;
+    configASSERT( pcWriteBuffer );
+
+    sprintf(pcWriteBuffer, "\r\nhis name is %s\r\n", name);
+    return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 static BaseType_t cmdConfigModeCommand(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)

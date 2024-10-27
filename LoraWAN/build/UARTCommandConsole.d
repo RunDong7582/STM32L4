@@ -41,7 +41,9 @@ build/UARTCommandConsole.o: clipack/src/UARTCommandConsole.c \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
+ clipack/src/../../Core/Inc/gpio.h clipack/src/../../Core/Inc/main.h \
+ Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h
 Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 Core/Inc/FreeRTOSConfig.h:
 Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
@@ -90,3 +92,6 @@ Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
+clipack/src/../../Core/Inc/gpio.h:
+clipack/src/../../Core/Inc/main.h:
+Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h:

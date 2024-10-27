@@ -43,6 +43,8 @@
 /* Demo application includes. */
 #include "serial.h"
 #include "usart.h"
+#include "../../Core/Inc/gpio.h"
+
 /* Dimensions the buffer into which input characters are placed. */
 #define cmdMAX_INPUT_SIZE          50
 
@@ -69,7 +71,10 @@
 static void prvUARTCommandConsoleTask( void * pvParameters );
 void vUARTCommandConsoleStart( uint16_t usStackSize,
                                UBaseType_t uxPriority );
+void LED_Thread_new (uint16_t usStackSize,
+                               UBaseType_t uxPriority );
 void vOutputString( const char * const pcMessage );
+static void prvLEDthreadTask (void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
@@ -102,6 +107,24 @@ void vUARTCommandConsoleStart( uint16_t usStackSize,
                  uxPriority,                /* The priority allocated to the task. */
                  NULL );                    /* A handle is not required, so just pass NULL. */
 }
+/*----------------------------------------------------------*/
+void LED_Thread_new (uint16_t usStackSize,
+                               UBaseType_t uxPriority )
+{
+    xTaskCreate( prvLEDthreadTask, /* The task that implements the command console. */
+                 "LED",                     /* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
+                 usStackSize,               /* The size of the stack allocated to the task. */
+                 NULL,                      /* The parameter is not used, so NULL is passed. */
+                 uxPriority,                /* The priority allocated to the task. */
+                 NULL );                    /* A handle is not required, so just pass NULL. */   
+}                               
+/*-----------------------------------------------------------*/
+static void prvLEDthreadTask (void * pvParameters )
+{
+    HAL_GPIO_TogglePin(LED11_GPIO_Port, LED11_Pin);
+    vTaskDelay(1000);
+}
+
 /*-----------------------------------------------------------*/
 
 static void prvUARTCommandConsoleTask( void * pvParameters )

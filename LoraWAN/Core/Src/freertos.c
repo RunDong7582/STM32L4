@@ -172,7 +172,8 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN StartDefaultTask */
   for(;;)
   {
-      osDelay(1);
+      HAL_GPIO_TogglePin(LED11_GPIO_Port, LED11_Pin);
+      osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
 }
